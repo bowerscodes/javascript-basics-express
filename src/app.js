@@ -16,6 +16,10 @@ const { multiply } = require('./lib/numbers');
 const { divide } = require('./lib/numbers');
 const { remainder } = require('./lib/numbers');
 
+// BOOLEANS
+const { negate } = require('./lib/booleans');
+const { truthiness } = require('./lib/booleans');
+
 // 
 
 
@@ -116,5 +120,15 @@ app.post('/numbers/remainder', (req, res) => {
         }
 });
 
+// BOOLEAN ROUTES
+app.post('/booleans/negate', (req, res) => {
+    const value = req.body.value;
+
+    res.status(200).json({ result: negate(value) })
+});
+app.post('/booleans/truthiness', (req, res) => {
+    const value = req.body.value;
+    res.status(200).json({ result: truthiness(value) })
+});
 
 module.exports = app;
