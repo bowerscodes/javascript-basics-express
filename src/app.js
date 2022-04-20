@@ -19,6 +19,7 @@ const { remainder } = require('./lib/numbers');
 // BOOLEANS
 const { negate } = require('./lib/booleans');
 const { truthiness } = require('./lib/booleans');
+const { isOdd } = require('./lib/booleans');
 
 // 
 
@@ -122,13 +123,20 @@ app.post('/numbers/remainder', (req, res) => {
 
 // BOOLEAN ROUTES
 app.post('/booleans/negate', (req, res) => {
-    const value = req.body.value;
-
-    res.status(200).json({ result: negate(value) })
+    res.status(200).json({ result: negate(req.body.value) });
 });
 app.post('/booleans/truthiness', (req, res) => {
-    const value = req.body.value;
-    res.status(200).json({ result: truthiness(value) })
+    res.status(200).json({ result: truthiness(req.body.value) });
+});
+app.get('/booleans/is-odd/:val', (req, res) => {
+
+    if (Number.isNaN(parseInt(req.params.val))) {
+        res.status(400).json({ error: 'Parameter must be a number.' });
+    }
+    else {
+        res.status(200).json({ result: isOdd(req.params.val) });
+
+    }
 });
 
 module.exports = app;
