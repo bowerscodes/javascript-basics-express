@@ -20,6 +20,7 @@ const { remainder } = require('./lib/numbers');
 const { negate } = require('./lib/booleans');
 const { truthiness } = require('./lib/booleans');
 const { isOdd } = require('./lib/booleans');
+const { startsWith } = require('./lib/booleans');
 
 // 
 
@@ -136,6 +137,13 @@ app.get('/booleans/is-odd/:val', (req, res) => {
     else {
         res.status(200).json({ result: isOdd(req.params.val) });
 
+    }
+});
+app.get('/booleans/:string/starts-with/:char', (req, res) => {
+    if (((req.params.char).length > 1) || (((req.params.char.length < 1))) ) {
+        res.status(400).json({ error: 'Parameter "character" must be a single character.' });
+    } else {
+        res.status(200).json({ result: startsWith(req.params.char, req.params.string) });
     }
 });
 
