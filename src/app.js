@@ -14,6 +14,7 @@ const { add } = require('./lib/numbers');
 const { subtract } = require('./lib/numbers');
 const { multiply } = require('./lib/numbers');
 const { divide } = require('./lib/numbers');
+const { remainder } = require('./lib/numbers');
 
 // 
 
@@ -97,7 +98,23 @@ app.post('/numbers/divide', (req, res) => {
         res.status(200).json({ result: divide(parseInt(a), parseInt(b))});
     }
 });
+app.post('/numbers/remainder', (req, res) => {
+    const a = req.body.a;
+    const b = req.body.b;
 
+        if (b === 0) {
+            res.status(400).json({ error: 'Unable to divide by 0.' });
+        }
+        else if (a === undefined || b === undefined) {
+            res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+        }
+        else if (Number.isNaN( parseInt(a) || parseInt(b))) {
+            res.status(400).json({ error: 'Parameters must be valid numbers.' })
+        }
+        else {
+            res.status(200).json({ result: remainder(parseInt(a), parseInt(b))});
+        }
+});
 
 
 module.exports = app;
