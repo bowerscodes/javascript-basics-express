@@ -11,8 +11,6 @@ This was a fantastic opportunity to reinforce my understanding of JavaScript Fun
 * [HTTP Routes](#HTTP-Routes)
 * [GET Requests](#GET-Requests)
 * [POST Requests](#POST-Requests)
-
-* [Unit Testing](#Unit-Testing)
 * [Examples of Use](#Examples-of-Use)
 * [Project Status](#Project-status)
 * [Sources & Credits](#Sources--credits)
@@ -75,6 +73,8 @@ app.get('/strings/hello/world', (req, res) => {
 The request path is defined within the `.get()` brackets, along with a **controller function** with two parameters: req - which represents the HTTP request that was sent - and res, which represents the response that will be sent.
 The `.status()` method is then called upon the `res`, or response parameter, which specifies a status code to respond with. Next, the .json method is called which defines the response in the form of a JSON object. in this case, the client will be sent a response with code `200`, and `{ result: 'Hello, world!' }`in its body.
 
+> Note: the Express.json Middleware must be installed in order to use its functionality.
+
 The format required of the expected response can be found in the accompanying test file:
 ```JavaScript 
 describe('GET /hello/{string}', () => {
@@ -89,27 +89,53 @@ describe('GET /hello/{string}', () => {
     });
 ```
 
+However, the top-level test defines `/{string}`as the end of the route - which means the user can effectively pass in any string using this route, and it will be assigned to `string`. This means it can be accessed using `req.params.string`, and therefore the functions imported from the orignial Library can process it:
+```JavaScript
+app.get('/strings/hello/:string', (req, res) => {
+    res.json( { result: sayHello(req.params.string) });
+});
+```
 
+#### POST Requests
+Since `GET` and `DELETE` requests cannot include a body, the app also needs Routes to cater for `POST`, `PUT` or `PATCH` requests which the user may send when they need to provide more data:
+```JavaScript
+it('returns an array with the element at the given index removed', done => {
+      request(app)
+        .post('/arrays/remove-element')
+        .send({ array: ['cat', 'dog', 'elephant', 'fox'] })
+        .query({ index: 2 })
+        .then(res => {
+          expect(res.status).toEqual(200);
+          expect(res.body).toEqual({ result: ['cat', 'dog', 'fox'] });
+          done();
+        });
+    });
+  });
+```
 
-
-
-
-
-## Unit Testing
-
-
+The `POST` request above is sent by the test suite and this time, inlcudes the `.send()` and `.query()` methods which respectively define a body and a query in the request. These two pieces of information - the array of animals in the body, and the index in the query - are the parameters required by the `removeNthElement2()` function in the Library:
+```JavaScript
+app.post('/arrays/remove-element/', (req, res) => {
+    if (!req.query.index) {
+        res.status(200).json({ result: removeNthElement2(0, req.body.array) });
+    } else if (req.query.index) {
+        res.status(200).json({ result: removeNthElement2(parseInt(req.query.index), req.body.array) });
+    }
+});
+```
+The data is accessed similarly to before, using `req.query.index` and `req.body.array` to access the index and array parameters respectively - depending on how the `If` statement handles the request.
 
 
 ## Examples of Use
-Whilst this project's primary function was to introduce me to the various JavaScript functions & methods for each data type by writing & passing unit tests, now that it is complete it can serve as a basic JavaScript library.
+This project has been instrumental in deepening my understanding of APIs and HTTP Requests - through the process of completing these exercises, the *JavaScript Basics* Library created previously has been adapted into an API of my own, which can process requests of my choosing.
+
 
 *Consider the following:*
-* **Internal Framework**
-> Different businesses require different operations to be carried out upon the data they process. Throughout my career, I will no doubt be spending lots of time developing internal frameworks for employers, using a test-driven approach to ensure that the functions in those frameworks are manipulating the data as required.
+* **Online Store**
+> This code could be adapted to process requests made of an online store - using bespoke functions to manage elements like product suggestions, and the shopping basket.
 
-* **APIs**
-> APIs are the interface by which different languages and programs communicate. In order to do this successfully, requests must be processed into usable data. They do this by calling a specific set of functions and methods on the requests received, which are defined in an accompanying library. This code could easily be used as a starting point for future API libraries.
-
+* **Online Music Library**
+> The knowledge gained from this project will be implemented in an upcoming project: Music Library. This will store Album and Artist information in an SQL Database which exists in its own Docker container and gives users CRUD Functionality.
 
 
 ## Project Status
