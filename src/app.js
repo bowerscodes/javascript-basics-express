@@ -28,7 +28,6 @@ const { arrayToCSVString } = require('./lib/arrays');
 const { addToArray2 } = require('./lib/arrays');
 const { elementsStartingWithAVowel } = require('./lib/arrays');
 const { removeNthElement2 } = require('./lib/arrays');
-const { removeNthElement } = require('./lib/arrays');
 
 // 
 

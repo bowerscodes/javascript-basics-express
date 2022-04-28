@@ -3,13 +3,10 @@ function negate(a) {
 };
 
 function both(a, b) {
-  if (a == true && b == true){
+  if (a == true && b == true)
     return true
-  }
-  else {
+  else 
     return false
-  }
-
 };
 
 function either(a, b) {
@@ -86,12 +83,10 @@ function isEven(a) {
 };
 
 function isSquare(a) {
-    if (Math.sqrt(a) % 1 == 0){
+    if (Math.sqrt(a) % 1 == 0)
       return true
-    }
-    else {
+    else 
       return false
-    }
 };
 
 function startsWith(char, string) {
